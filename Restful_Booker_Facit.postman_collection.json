@@ -1,0 +1,504 @@
+{
+	"info": {
+		"_postman_id": "5933b153-beef-4296-b63d-71a1d7e54e2f",
+		"name": "Restful Booker Facit",
+		"description": "## Overview\nThe Restful Booker API is a sample API based on hotel bookings. The API contains endpoints to demonstrate CRUD operations. The source code can be obtained from https://github.com/mwinteringham/restful-booker\n\n",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Get Auth Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4ebb965a-e091-4af6-9af8-02463a1303e9",
+								"exec": [
+									"",
+									"pm.globals.set(\"my_booker_token\", pm.response.json().token);",
+									"",
+									"// Kontroll statuskod",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Kontrollerar att response bodyn innehåller token som property",
+									"pm.test(\"Token property exists\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('token');",
+									"});",
+									"",
+									"// Lägga till kontroll att token propertyn inte är tom?",
+									"",
+									"/*",
+									"var authSchema = {",
+									"  \"properties\": {",
+									"    \"token\": {",
+									"        \"description\": \"The auth token returned\",",
+									"        \"type\": \"string\",",
+									"    }",
+									"  }",
+									"};",
+									"",
+									"var response = JSON.parse(responseBody);",
+									"",
+									"pm.test('Schema is valid', function() {",
+									"  pm.expect(tv4.validate(response, authSchema)).to.be.true;",
+									"});",
+									"*/",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "85908a6b-585a-4877-a4c6-a0fda0e828cf",
+								"exec": [
+									"/*",
+									"var password = pm.environment.get(\"variable_key\");",
+									"console.log(\"password is \" + password);",
+									"if(password === undefined) {",
+									"    console.log(\"Setting password to password123\");",
+									"    pm.environment.set(\"password\", \"password123\");",
+									"}",
+									"*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"password123\"\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/auth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth"
+							]
+						},
+						"description": "Get auth token"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "Get Bookings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e2a9a7a0-e79d-4b0a-8036-4f043c2ed658",
+								"exec": [
+									"// Kontroll av statuskod",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/booking",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking"
+							]
+						},
+						"description": "Get a list of all bookings"
+					},
+					"response": []
+				},
+				{
+					"name": "Create new Booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ab85e255-2d15-4deb-9417-8776ab9609da",
+								"exec": [
+									"// Kontroll av statuskod",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"// Hämtar request bodyn och sparar i variabel",
+									"var request_body = JSON.parse(pm.globals.get(\"request_body\"));",
+									"",
+									"// Den nya bokningens bokningsid sparas i variabel. ",
+									"pm.globals.set(\"bookingID\", pm.response.json().bookingid);",
+									"",
+									"// Kontrollerar att förnamnet i response bodyn stämmer överens med det förnamn vi skickade in i bodyn",
+									"pm.test(\"Check firstname of new Booking\", function () {",
+									"    pm.expect(jsonData.booking.firstname).to.eql(\"Sally\");",
+									"});",
+									"",
+									"// Kontrollerar att förnamnet i response bodyn stämmer överens med det förnamn vi skickade in i bodyn med hjälp av variabel",
+									"pm.test(\"Check firstname of new Booking\", function () {",
+									"    pm.expect(jsonData.booking.firstname).to.eql(request_body.firstname);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "dded9672-2ccf-44a1-8515-24bc50e934ee",
+								"exec": [
+									"var request_body = {\r",
+									"  \"firstname\" : \"Sally\",\r",
+									"  \"lastname\" : \"Brown\",\r",
+									"  \"totalprice\" : 111,\r",
+									"  \"depositpaid\" : true,\r",
+									"  \"additionalneeds\" : \"Breakfast\",\r",
+									"  \"bookingdates\" : {\r",
+									"    \"checkin\" : \"2020-03-06\",\r",
+									"    \"checkout\" : \"2020-03-09\"\r",
+									"  }\r",
+									"};\r",
+									"\r",
+									"pm.globals.set(\"request_body\", JSON.stringify(request_body));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{request_body}}"
+						},
+						"url": {
+							"raw": "{{url}}/booking",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "21ee0aa2-372c-4dbf-9317-ae7ad6ef4d8c",
+								"exec": [
+									"// Kontroll av statuskod = ytterligare ett sätt att se så att bokningen finns. ",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Response body should not be empty\", function () {",
+									"    pm.expect(jsonData.length).to.not.eql(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/booking/{{bookingID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"{{bookingID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "78e18df7-62b7-46d9-a793-6e9640855498",
+								"exec": [
+									"// Kontroll av statuskod",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Kontroll av response bodyn att bokningen har ändrats",
+									"pm.test(\"Booking is updated\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"James\");",
+									"    pm.expect(pm.response.text()).to.include(\"2020-03-05\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "token={{my_booker_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"James\",\r\n    \"lastname\" : \"Brown\",\r\n    \"totalprice\" : 111,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2020-03-05\",\r\n        \"checkout\" : \"2020-03-09\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/booking/{{bookingID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"{{bookingID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Booking (partial)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "78e18df7-62b7-46d9-a793-6e9640855498",
+								"exec": [
+									"// Kontroll av statuskod",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Kontroll av response bodyn att bokningen har ändrats",
+									"pm.test(\"Booking is updated\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Jim\");",
+									"    pm.expect(pm.response.text()).to.include(\"Breakfast and dinner\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Cookie",
+								"type": "text",
+								"value": "token={{my_booker_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Jim\",\r\n    \"lastname\" : \"Brown\",\r\n    \"additionalneeds\" : \"Breakfast and dinner\"\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/booking/{{bookingID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"{{bookingID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "565047c0-2425-409f-9527-a706b820ee9d",
+								"exec": [
+									"",
+									"// Två lika sätt att kontrollera status",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Status code name has string\", function () {",
+									"    pm.response.to.have.status(\"Created\");",
+									"});",
+									"",
+									"// Hämta variabler nedan från globals eller environment",
+									"var url = pm.environment.get(\"url\") + \"/booking/\" +  pm.globals.get(\"bookingID\");",
+									"",
+									"const getRequest = {",
+									"        url: url,",
+									"        method: 'GET'",
+									"};",
+									"",
+									"pm.sendRequest(getRequest, function (err, res) {",
+									"    if (err) { ",
+									"        console.log(err);",
+									"    }",
+									"    ",
+									"    console.log(res);",
+									"    ",
+									"    pm.test('Response should be Not Found', function () {",
+									"        pm.expect(res.status).to.include(\"Not Found\");",
+									"    });",
+									"    ",
+									"    pm.test(\"Response code 404\", function() {",
+									"        pm.expect(res.code).to.equal(404);",
+									"    })",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{my_booker_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/booking/{{bookingID}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"{{bookingID}}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "All bookings requests ",
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "de0423f3-d3bf-463b-9f55-1b740214ad26",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "d95ca0a9-9d06-46e0-bad6-cd7589cfcdb2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
