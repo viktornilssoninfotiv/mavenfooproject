@@ -7,9 +7,9 @@ pipeline {
             }
         }
         stage('junit build') {
-                steps {
-                    sh "mvn compile"
-                }
+            steps {
+                sh "mvn compile"
+            }
         }
         stage('junit test') {
             steps {
@@ -29,11 +29,11 @@ pipeline {
                 always {
                         junit '**/*xml'
                     }
-                }
+            }
         }
         stage('robot') {
             steps {
-                    sh 'robot -d results --variable BROWSER:headlesschrome car.robot'
+                sh 'robot -d results --variable BROWSER:headlesschrome car.robot'
             }
             post {
                 always {
@@ -50,7 +50,7 @@ pipeline {
                                   unstableThreshold   : 40,
                                   otherFiles          : "**/*.png,**/*.jpg",
                                 ]
-                           )
+                          )
                     }
                 }
             }
