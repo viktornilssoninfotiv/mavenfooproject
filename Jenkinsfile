@@ -21,7 +21,7 @@ pipeline {
                 }
             }
         }
-        stage('newman') {
+        stage('API testing with Newman') {
             steps {
                 sh 'newman run Restful_Booker_Facit.postman_collection.json --environment Restful_Booker.postman_environment.json --reporters junit'
             }
@@ -31,7 +31,7 @@ pipeline {
                     }
             }
         }
-        stage('robot') {
+        stage('Robot Framework System tests with Selenium') {
             steps {
                 sh 'robot -d results --variable BROWSER:headlesschrome car.robot'
             }
