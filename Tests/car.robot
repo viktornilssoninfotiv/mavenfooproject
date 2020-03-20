@@ -54,3 +54,7 @@ Card number
     Should Not Be Equal     ${too_long_card_number}  ${cut_card_number}
     Close Browser
 
+*** Keywords ***
+Begin Web Test
+    Open Browser    about:blank  ${BROWSER}
+    Maximize Browser Window
