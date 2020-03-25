@@ -38,7 +38,7 @@ pipeline {
         }
         stage('Robot Framework System tests with Selenium') {
             steps {
-                sh 'robot --variable BROWSER:headlesschrome -d Results  Tests'
+                sh 'robot --variable BROWSER:headlesschrome -d Results Tests'
             }
             post {
                 always {
@@ -56,7 +56,6 @@ pipeline {
                                   otherFiles          : "**/*.png,**/*.jpg",
                                 ]
                           )
-                          chuckNorris()
                     }
                 }
             }
@@ -64,7 +63,7 @@ pipeline {
     }
     post {
          always {
-            junit '**/TEST*.xml'
+            chuckNorris()
             cobertura autoUpdateHealth: false, autoUpdateStability: false,
             coberturaReportFile: '**/target/site/cobertura/coverage.xml', conditionalCoverageTargets: '70, 0, 0',
             enableNewApi: true, failUnhealthy: false, failUnstable: false, lineCoverageTargets: '80, 0, 0',
