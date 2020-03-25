@@ -25,7 +25,7 @@ pipeline {
             steps {
                 sh 'newman run Restful_Booker_Facit.postman_collection.json
                 --environment Restful_Booker.postman_environment.json
-                --reporters junit –reporter-junit-export “newman/newman_report.xml”'
+                --reporters junit –reporter-junit-export newman/newman_report.xml'
             }
             post {
                 always {
