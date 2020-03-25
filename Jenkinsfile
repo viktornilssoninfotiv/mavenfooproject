@@ -23,11 +23,13 @@ pipeline {
         }
         stage('API testing with Newman') {
             steps {
-                sh 'newman run Restful_Booker_Facit.postman_collection.json --environment Restful_Booker.postman_environment.json --reporters junit'
+                sh 'newman run Restful_Booker_Facit.postman_collection.json
+                --environment Restful_Booker.postman_environment.json
+                --reporters junit –reporter-junit-export “newman/newman_report.xml”'
             }
             post {
                 always {
-                        junit '**/*xml'
+                        junit '**/newman/newman_report.xml'
                     }
             }
         }
