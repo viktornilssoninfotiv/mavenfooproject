@@ -21,6 +21,16 @@ pipeline {
                 }
             }
         }
+        stage('Cobertura coverage') {
+            steps {
+                sh "mvn -B cobertura:cobertura"
+            }
+            post {
+                always {
+                    junit '**/TEST*.xml'
+                }
+            }
+        }
         stage('API testing with Newman') {
             steps {
                 sh 'newman run Restful_Booker_Facit.postman_collection.json --environment Restful_Booker.postman_environment.json --reporters junit'
@@ -60,6 +70,7 @@ pipeline {
     post {
          always {
             junit '**/TEST*.xml'
+            step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: '**/coverage.xml', failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false])
             emailext attachLog: true, attachmentsPattern: '**/TEST*xml',
             body: 'Bod-DAy!', recipientProviders: [culprits()], subject:
             '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!'
