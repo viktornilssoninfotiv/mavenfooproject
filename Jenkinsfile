@@ -1,11 +1,6 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/viktornilssoninfotiv/mavenfooproject.git'
-            }
-        }
         stage('junit build') {
             steps {
                 sh "mvn compile"
